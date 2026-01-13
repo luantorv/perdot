@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+DOTFILES_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+
+ACTION=""
+DRY_RUN=0
+FORCE=0
+VERBOSE=0
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        i|install)
+            ACTION="install"
+            ;;
+        u|update)
+            ACTION="update"
+            ;;
+        --dry-run)
+            DRY_RUN=1
+            ;;
+        --force)
+            FORCE=1
+            ;;
+        --verbose|-v)
+            VERBOSE=1
+            ;;
+        -h|--help)
+            echo "Usage: dotfile [install|update] [--dry-run] [--force] [--verbose]"
+            exit 0
+            ;;
+        *)
+            echo "Unknown option: $1" >&2
+            exit 1
+            ;;
+    esac
+    shift
+done
+
+if [[ -z "$ACTION" ]]; then
+    echo "Error: no action specified (install|update)" >&2
+    exit 1
+fi
+
+export DOTFILES_ROOT
+export ACTION DRY_RUN FORCE VERBOSE
+
+exec "$DOTFILES_ROOT/scripts/resolver.sh"

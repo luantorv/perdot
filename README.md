@@ -11,8 +11,8 @@ I'll maintain the repository and, if possible, add more features at my own pace.
 ```bash
 git clone --depth 1 https://github.com/luantorv/dotfile.git ~/dotfile
 cd ~/dotfile
-chmod +x ./install.sh
-./install.sh
+chmod +x ./bin/* ./scripts/*.sh
+./bin/perdot
 ```
 
 ## Updating
