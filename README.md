@@ -9,18 +9,28 @@ I'll maintain the repository and, if possible, add more features at my own pace.
 ## Instalation
 
 ```bash
-git clone --depth 1 https://github.com/luantorv/dotfile.git ~/dotfile
-cd ~/dotfile
+git clone --depth 1 https://github.com/luantorv/perdot.git ~/perdot
+cd ~/perdot
 chmod +x ./bin/* ./scripts/*.sh
 ./bin/perdot
 ```
 
-## Updating
+## Update flow
 
-```bash
-# for first updating
-chmod +x ~/dotfile/update.sh
+`perdot update` will:
+1. Pull latest changes from the dotfiles repository
+2. Resolve configurations against installed package versions
+3. Apply only relevant configuration updates
 
-# for the rest
-~/dotfile/update.sh
-```
+Backups are stored under:
+`state/backups/<timestamp>/`
+
+Manual rollback can be done by restoring files from that directory.
+
+## perdot doctor
+
+Checks system readiness without applying any changes.
+
+Examples:
+- `perdot doctor`
+- `perdot doctor --strict`

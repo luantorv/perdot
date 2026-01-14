@@ -6,9 +6,12 @@ source "$(dirname "$0")/utils.sh"
 FILES_DIR="$DOTFILES_ROOT/files"
 MAPPINGS_FILE="$DOTFILES_ROOT/mappings/default.map"
 STATE_DIR="$DOTFILES_ROOT/state"
-
-
 PLAN_FILE="$(mktemp)"
+TOUCHED_FILE="$STATE_DIR/last_run.touched" > "$TOUCHED_FILE"
+
+LOCAL_BIN="$HOME/.local/bin"
+GLOBAL_BIN="$LOCAL_BIN/perdot"
+SOURCE_BIN="$DOTFILES_ROOT/bin/perdot"
 
 PACKAGES=(
     hyprland
@@ -26,6 +29,19 @@ PACKAGES=(
     cliphist
     hypridle
 )
+
+AUR_PACKAGES=(
+    # vacío por ahora
+)
+
+SERVICES_MAP=(
+    "mako:mako.service"
+    "hypridle:hypridle.service"
+)
+
+source "$(dirname "$0")/doctor.sh"
+source "$(dirname "$0")/update.sh"
+source "$(dirname "$0")/install.sh"
 
 get_installed_version() {
     pacman -Q "$1" 2>/dev/null | awk '{print $2}' || true
@@ -79,21 +95,7 @@ show_plan() {
     column -t -s'|' "$PLAN_FILE"
 }
 
-TIMESTAMP="$(date +%Y-%m-%d_%H-%M-%S)"
-BACKUP_DIR="$STATE_DIR/backups/$TIMESTAMP"
-
-ensure_backup_dir() {
-    [[ -d "$BACKUP_DIR" ]] || mkdir -p "$BACKUP_DIR"
-}
-
-backup_file() {
-    local file="$1"
-    local backup_path="$BACKUP_DIR/$file"
-
-    ensure_backup_dir
-    mkdir -p "$(dirname "$backup_path")"
-    cp -a "$file" "$backup_path"
-}
+source "$(dirname "$0")/backup.sh"
 
 apply_plan() {
     while IFS='|' read -r pkg src target; do
@@ -120,6 +122,7 @@ apply_plan() {
                 fi
             fi
 
+            echo "$dest" >> "$TOUCHED_FILE"
             ln -sf "$file" "$dest"
             log "Linked $dest -> $file"
         done
@@ -128,11 +131,30 @@ apply_plan() {
 
 log "dotfile $ACTION"
 
+if [[ "$ACTION" == "doctor" ]]; then
+    doctor
+    exit 0
+fi
+
+if [[ "$ACTION" == "install" ]]; then
+    install_self
+fi
+
+if [[ "$ACTION" == "update" || "$ACTION" == "install" ]]; then
+    sync_packages
+fi
+
+if [[ "$ACTION" == "update" ]]; then
+    do_update
+fi
+
 build_plan
 
 if [[ "$DRY_RUN" == "1" ]]; then
     show_plan
 else
+    trap rollback ERR
     apply_plan
+    restart_services
 fi
 

@@ -7,6 +7,11 @@ ACTION=""
 DRY_RUN=0
 FORCE=0
 VERBOSE=0
+STRICT=0
+
+PACKAGES=0
+AUR=0
+SERVICES=0
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -16,6 +21,9 @@ while [[ $# -gt 0 ]]; do
         u|update)
             ACTION="update"
             ;;
+        d|doctor)
+            ACTION="doctor"
+            ;;
         --dry-run)
             DRY_RUN=1
             ;;
@@ -24,6 +32,18 @@ while [[ $# -gt 0 ]]; do
             ;;
         --verbose|-v)
             VERBOSE=1
+            ;;
+        --packages)
+            PACKAGES=1
+            ;;
+        --aur)
+            AUR=1
+            ;;
+        --services)
+            SERVICES=1
+            ;;
+        --strict)
+            STRICT=1
             ;;
         -h|--help)
             echo "Usage: dotfile [install|update] [--dry-run] [--force] [--verbose]"
@@ -43,6 +63,7 @@ if [[ -z "$ACTION" ]]; then
 fi
 
 export DOTFILES_ROOT
-export ACTION DRY_RUN FORCE VERBOSE
+export ACTION DRY_RUN FORCE VERBOSE STRICT
+export PACKAGES AUR SERVICES
 
 exec "$DOTFILES_ROOT/scripts/resolver.sh"

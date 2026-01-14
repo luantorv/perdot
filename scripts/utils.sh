@@ -17,3 +17,7 @@ version_ge() {
     # version_ge INSTALLED REQUIRED
     [[ "$(printf '%s\n' "$2" "$1" | sort -V | head -n1)" == "$2" ]]
 }
+
+ok()   { echo "[OK]   $*"; }
+warn() { echo "[WARN] $*"; }
+err()  { echo "[ERR]  $*"; [[ "${STRICT:-0}" == "1" ]] && exit 1; }
