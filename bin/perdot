@@ -29,6 +29,7 @@ while [[ $# -gt 0 ]]; do
             ;;
         u|uninstall)
             ACTION="uninstall"
+            ;;
         s|status)
             ACTION="status"
             ;;
