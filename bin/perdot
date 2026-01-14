@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-DOTFILES_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+DOTFILES_ROOT="~/perdot"
 
 ACTION=""
 
