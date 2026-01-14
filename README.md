@@ -52,3 +52,9 @@ Removes the perdot command, without touching installed configs:
 To remove internal state and backups:
 
 > `perdot uninstall --all`
+
+## Author:
+
+Reis Viera, Luis
+- GitHub: [@luantorv](https://github.com/luantorv/)
+- Discord: [@luis_](https://discord.com/users/711613864386625618)

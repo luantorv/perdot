@@ -1,0 +1,13 @@
+export HISTFILE=~/.zsh_history
+export HISTSIZE=10000
+export SAVEHIST=10000
+
+setopt autocd
+setopt extendedglob
+setopt histignoredups
+setopt sharehistory
+
+autoload -Uz compinit
+compinit
+
+PS1='%n@%m:%~%# '

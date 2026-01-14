@@ -1,4 +1,5 @@
-hyprland   ~/.config/hypr
-eww        ~/.config/eww
-rofi       ~/.config/rofi
-mako       ~/.config/mako
+hyprland ~/.config/hypr
+kitty    ~/.config/kitty
+zsh      ~
+rofi     ~/.config/rofi
+mako     ~/.config/mako
