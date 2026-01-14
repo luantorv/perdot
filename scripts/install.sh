@@ -19,3 +19,6 @@ install_self() {
     ln -sf "$SOURCE_BIN" "$GLOBAL_BIN"
     log "perdot available at $GLOBAL_BIN"
 }
+
+log "Initializing perdot state"
+mkdir -p "$STATE_DIR"/{backups,cache}

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-DOTFILES_ROOT="~/perdot"
+DOTFILES_ROOT="$HOME/perdot"
 
 ACTION=""
 

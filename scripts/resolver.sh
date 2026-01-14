@@ -2,12 +2,11 @@
 set -euo pipefail
 
 source "$(dirname "$0")/utils.sh"
+source "$(dirname "$0")/init.sh"
 
 FILES_DIR="$DOTFILES_ROOT/files"
 MAPPINGS_FILE="$DOTFILES_ROOT/mappings/default.map"
-STATE_DIR="$DOTFILES_ROOT/state"
 PLAN_FILE="$(mktemp)"
-TOUCHED_FILE="$STATE_DIR/last_run.touched" > "$TOUCHED_FILE"
 
 LOCAL_BIN="$HOME/.local/bin"
 GLOBAL_BIN="$LOCAL_BIN/perdot"
