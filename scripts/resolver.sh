@@ -42,6 +42,7 @@ SERVICES_MAP=(
 source "$(dirname "$0")/doctor.sh"
 source "$(dirname "$0")/update.sh"
 source "$(dirname "$0")/install.sh"
+source "$(dirname "$0")/uninstall.sh"
 
 get_installed_version() {
     pacman -Q "$1" 2>/dev/null | awk '{print $2}' || true
@@ -96,6 +97,7 @@ show_plan() {
 }
 
 source "$(dirname "$0")/backup.sh"
+source "$(dirname "$0")/status.sh"
 
 apply_plan() {
     while IFS='|' read -r pkg src target; do
@@ -130,6 +132,16 @@ apply_plan() {
 }
 
 log "dotfile $ACTION"
+
+if [[ "$ACTION" == "status" ]]; then
+    status
+    exit 0
+fi
+
+if [[ "$ACTION" == "uninstall" ]]; then
+    uninstall_self
+    exit 0
+fi
 
 if [[ "$ACTION" == "doctor" ]]; then
     doctor

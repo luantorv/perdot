@@ -4,10 +4,13 @@ set -euo pipefail
 DOTFILES_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 
 ACTION=""
+
 DRY_RUN=0
 FORCE=0
 VERBOSE=0
 STRICT=0
+PURGE_STATE=0
+PURGE_BACKUPS=0
 
 PACKAGES=0
 AUR=0
@@ -23,6 +26,11 @@ while [[ $# -gt 0 ]]; do
             ;;
         d|doctor)
             ACTION="doctor"
+            ;;
+        u|uninstall)
+            ACTION="uninstall"
+        s|status)
+            ACTION="status"
             ;;
         --dry-run)
             DRY_RUN=1
@@ -45,6 +53,16 @@ while [[ $# -gt 0 ]]; do
         --strict)
             STRICT=1
             ;;
+        --purge-state)
+            PURGE_STATE=1
+            ;;
+        --purge-backups)
+            PURGE_BACKUPS=1
+            ;;
+        --all)
+            PURGE_STATE=1
+            PURGE_BACKUPS=1
+            ;;
         -h|--help)
             echo "Usage: dotfile [install|update] [--dry-run] [--force] [--verbose]"
             exit 0
@@ -63,7 +81,7 @@ if [[ -z "$ACTION" ]]; then
 fi
 
 export DOTFILES_ROOT
-export ACTION DRY_RUN FORCE VERBOSE STRICT
+export ACTION DRY_RUN FORCE VERBOSE STRICT PURGE_STATE PURGE_BACKUPS
 export PACKAGES AUR SERVICES
 
 exec "$DOTFILES_ROOT/scripts/resolver.sh"

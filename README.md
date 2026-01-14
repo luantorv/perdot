@@ -27,10 +27,28 @@ Backups are stored under:
 
 Manual rollback can be done by restoring files from that directory.
 
-## perdot doctor
+## Diagnosis
+
+### perdot doctor
 
 Checks system readiness without applying any changes.
 
 Examples:
 - `perdot doctor`
 - `perdot doctor --strict`
+
+### perdot status
+
+Shows current system state without making changes:
+
+> `perdot status`
+
+## Uninstall
+
+Removes the perdot command, without touching installed configs:
+
+> `perdot uninstall`
+
+To remove internal state and backups:
+
+> `perdot uninstall --all`
