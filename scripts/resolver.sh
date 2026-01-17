@@ -38,6 +38,8 @@ SERVICES_MAP=(
     "hypridle:hypridle.service"
 )
 
+CHECK_PACCKAGE=0
+
 source "$(dirname "$0")/doctor.sh"
 source "$(dirname "$0")/update.sh"
 source "$(dirname "$0")/install.sh"

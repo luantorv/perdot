@@ -6,9 +6,11 @@ doctor() {
     echo
 
     # 1. Repo
-    [[ -d "$DOTFILES_ROOT/.git" ]] \
-        && ok "Git repository detected" \
-        || err "Not a git repository"
+    if git -C "$DOTFILES_ROOT" status --porcelain >/dev/null 2>&1; then
+        ok "Git repository accessible"
+    else
+        err "Cannot access git repository"
+    fi
 
     git -C "$DOTFILES_ROOT" status --porcelain >/dev/null 2>&1 \
         && ok "Git repository is accessible" \
@@ -35,7 +37,7 @@ doctor() {
     done
 
     # 4. Optional tools
-    if [[ "$PACKAGES" == "1" ]]; then
+    if [[ "$CHECK_PACKAGES" == "1" ]]; then
         command -v sudo >/dev/null \
             && ok "sudo available for package install" \
             || err "sudo required for --packages"
@@ -57,12 +59,12 @@ doctor() {
     done
 
     if [[ -L "$GLOBAL_BIN" ]]; then
-        ok "perdot is installed in ~/.local/bin"
+        ok "perdot is linked in ~/.local/bin"
     else
-        warn "perdot not installed globally (run: perdot install)"
+        warn "perdot not linked globally (run: perdot install)"
     fi
 
-    echo "$PATH" | grep -q "$LOCAL_BIN" \
+    echo ":$PATH:" | grep -q ":$LOCAL_BIN:" \
         && ok "~/.local/bin is in PATH" \
         || warn "~/.local/bin not in PATH"
 
