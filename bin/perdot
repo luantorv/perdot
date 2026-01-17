@@ -16,6 +16,35 @@ PACKAGES=0
 AUR=0
 SERVICES=0
 
+# Función auxiliar para comprobar si una flag prohibida está activa
+forbid_flags() {
+    for flag in "$@"; do
+        case "$flag" in
+            packages) [[ "$PACKAGES" -eq 1 ]] && echo "Error: --packages no es válido con $ACTION" && exit 1 ;;
+            aur)      [[ "$AUR" -eq 1 ]]      && echo "Error: --aur no es válido con $ACTION"      && exit 1 ;;
+            services) [[ "$SERVICES" -eq 1 ]] && echo "Error: --services no es válido con $ACTION" && exit 1 ;;
+            dry-run)  [[ "$DRY_RUN" -eq 1 ]]  && echo "Error: --dry-run no es válido con $ACTION"  && exit 1 ;;
+            force)    [[ "$FORCE" -eq 1 ]]    && echo "Error: --force no es válido con $ACTION"    && exit 1 ;;
+            purge)    
+                if [[ "$PURGE_STATE" -eq 1 || "$PURGE_BACKUPS" -eq 1 ]]; then
+                    echo "Error: las flags de purge no son válidas con $ACTION" && exit 1
+                fi
+                ;;
+        esac
+    done
+}
+
+validate_flags() {
+    case "$ACTION" in
+        install)
+            forbid_flags packages aur services purge [cite: 1, 10, 11, 12, 14, 15]
+            ;;
+        doctor|status)
+            forbid_flags dry-run force packages aur services purge [cite: 3, 5, 7, 8, 10, 11, 12, 14, 15]
+            ;;
+    esac
+}
+
 while [[ $# -gt 0 ]]; do
     case "$1" in
         i|install)
@@ -27,11 +56,14 @@ while [[ $# -gt 0 ]]; do
         d|doctor)
             ACTION="doctor"
             ;;
-        u|uninstall)
+        r|uninstall)
             ACTION="uninstall"
             ;;
         s|status)
             ACTION="status"
+            ;;
+        S|setup)
+            ACTION="setup"
             ;;
         --dry-run)
             DRY_RUN=1
@@ -60,12 +92,34 @@ while [[ $# -gt 0 ]]; do
         --purge-backups)
             PURGE_BACKUPS=1
             ;;
-        --all)
+        --purge-all)
             PURGE_STATE=1
             PURGE_BACKUPS=1
             ;;
         -h|--help)
-            echo "Usage: dotfile [install|update] [--dry-run] [--force] [--verbose]"
+            echo "Usage: perdot <command> [flags]"
+            echo
+            echo "Commands:"
+            echo "  -i |install           Install perdot globally"
+            echo "  -u |update            Update dotfiles from the repository and update symlinks"
+            echo "  -d |doctor            Run diagnostics on the dotfiles setup"
+            echo "  -r |uninstall         Uninstall perdot from the system"
+            echo "  -s |status            Show the current status of dotfiles"
+            echo "  -S |setup             Initial setup of perdot environment"
+            echo "  -h |--help            Show this help message"
+            echo
+            echo "Flags:"
+            echo "  --dry-run             Simulate actions without making changes"
+            echo "  --force               Force actions that would normally be skipped"
+            echo "  -v | --verbose        Enable verbose output"
+            echo "  --strict              Enable strict mode for error handling"
+            echo "  --packages            Manage packages (update/install only)"
+            echo "  --aur                 Include AUR packages (requires --packages)"
+            echo "  --services            Restart affected services (update/setup only)"
+            echo "  --purge-state         Purge the state directory before operation"
+            echo "  --purge-backups       Purge backup files before operation"
+            echo "  --purge-all           Purge both state and backups (same as --purge-state --purge-backups)"
+            echo
             exit 0
             ;;
         *)
@@ -80,6 +134,8 @@ if [[ -z "$ACTION" ]]; then
     echo "Error: no action specified (install|update)" >&2
     exit 1
 fi
+
+validate_flags
 
 export DOTFILES_ROOT
 export ACTION DRY_RUN FORCE VERBOSE STRICT PURGE_STATE PURGE_BACKUPS

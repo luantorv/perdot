@@ -99,6 +99,7 @@ show_plan() {
 
 source "$(dirname "$0")/backup.sh"
 source "$(dirname "$0")/status.sh"
+source "$(dirname "$0")/setup.sh"
 
 apply_plan() {
     while IFS='|' read -r pkg src target; do
@@ -141,6 +142,11 @@ fi
 
 if [[ "$ACTION" == "uninstall" ]]; then
     uninstall_self
+    exit 0
+fi
+
+if [[ "$ACTION" == "setup" ]]; then
+    setup
     exit 0
 fi
 

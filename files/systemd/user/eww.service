@@ -1,0 +1,12 @@
+[Unit]
+Description=EWW widgets daemon
+After=graphical-session.target
+Wants=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/eww daemon --no-daemonize
+Restart=on-failure
+
+[Install]
+WantedBy=default.target
