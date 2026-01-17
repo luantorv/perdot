@@ -21,3 +21,17 @@ mkdir -p \
     "$CACHE_DIR"
 
 touch "$TOUCHED_FILE"
+
+ensure_state() {
+    mkdir -p \
+        "$STATE_DIR/backups" \
+        "$STATE_DIR/locks" \
+        "$STATE_DIR/logs"
+
+    local touched="$STATE_DIR/last_run.touched"
+
+    if [[ ! -f "$touched" ]]; then
+        touch "$touched"
+        log "Created state file: last_run.touched"
+    fi
+}
