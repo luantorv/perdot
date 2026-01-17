@@ -2,6 +2,7 @@
 set -euo pipefail
 
 source "$(dirname "$0")/utils.sh"
+source "$(dirname "$0")/runtime.sh"
 
 SYSTEMD_USER_DIR="$HOME/.config/systemd/user"
 SETUP_STATE_DIR="$STATE_DIR/setup"

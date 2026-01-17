@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+source "$(dirname "$0")/utils.sh"
+source "$(dirname "$0")/runtime.sh"
+
 uninstall_self() {
     log "Uninstalling perdot"
 

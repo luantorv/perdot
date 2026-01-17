@@ -2,7 +2,7 @@
 set -euo pipefail
 
 source "$(dirname "$0")/utils.sh"
-source "$(dirname "$0")/init.sh"
+source "$(dirname "$0")/runtime.sh"
 
 FILES_DIR="$DOTFILES_ROOT/files"
 MAPPINGS_FILE="$DOTFILES_ROOT/mappings/default.map"

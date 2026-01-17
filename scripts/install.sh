@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+source "$(dirname "$0")/utils.sh"
+source "$(dirname "$0")/runtime.sh" 
+
 install_self() {
     log "Installing perdot command"
 
