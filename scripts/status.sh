@@ -1,83 +1,117 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-source "$(dirname "$0")/utils.sh"
-source "$(dirname "$0")/runtime.sh"
+source "$SCRIPTS_DIR/runtime.sh"
+source "$SCRIPTS_DIR/utils.sh"
 
-status_packages() {
-    echo "[PACKAGES]"
+check_repo() {
+    echo "Repository"
 
-    for pkg in "${PACKAGES[@]}"; do
-        if pacman -Q "$pkg" >/dev/null 2>&1; then
-            ver="$(pacman -Q "$pkg" | awk '{print $2}')"
-            ok "$pkg $ver"
-        else
-            warn "$pkg not installed"
-        fi
-    done
+    if [[ -d "$DOTFILES_ROOT/.git" ]]; then
+        ok "Git repository detected"
+    else
+        err "Not a git repository"
+    fi
+
+    echo
 }
 
-status_configs() {
-    echo "[CONFIGS]"
+check_paths() {
+    echo "Paths"
 
-    build_plan
+    [[ -d "$FILES_DIR" ]] \
+        && ok "files/ directory exists" \
+        || err "files/ directory missing"
 
-    while IFS='|' read -r pkg src target; do
-        find "$src" -type f | while read -r file; do
-            rel="${file#$src/}"
-            dest="$target/$rel"
+    [[ -f "$MAPPINGS_FILE" ]] \
+        && ok "Mappings file present" \
+        || err "Mappings file missing"
 
-            if [[ ! -e "$dest" ]]; then
-                warn "$dest (missing)"
-                continue
-            fi
-
-            if [[ -L "$dest" ]]; then
-                link="$(readlink "$dest")"
-                if [[ "$link" == "$file" ]]; then
-                    ok "$dest -> $link"
-                else
-                    err "$dest (points to $link)"
-                fi
-            else
-                warn "$dest (not a symlink)"
-            fi
-        done
-    done < "$PLAN_FILE"
+    echo
 }
 
-status_backups() {
-    echo "[BACKUPS]"
+check_state() {
+    echo "State"
 
-    if [[ ! -d "$STATE_DIR/backups" ]]; then
-        warn "No backups found"
+    if [[ -d "$STATE_DIR" ]]; then
+        ok "state/ directory exists"
+    else
+        warn "state/ directory missing"
         return
     fi
 
-    count="$(ls -1 "$STATE_DIR/backups" | wc -l)"
-    ok "$count backup snapshots available"
+    [[ -d "$STATE_DIR/backups" ]] \
+        && ok "backups/ directory present" \
+        || warn "backups/ directory missing"
+
+    [[ -f "$STATE_DIR/last_run.touched" ]] \
+        && ok "last_run.touched present" \
+        || warn "last_run.touched missing"
+
+    echo
+}
+
+check_symlinks() {
+    echo "Dotfiles"
+
+    local broken=0
+
+    while IFS='|' read -r pkg src target; do
+        find "$src" -type f | while read -r file; do
+            local rel="${file#$src/}"
+            local dest="$target/$rel"
+
+            if [[ -L "$dest" ]]; then
+                ok "Linked: $dest"
+            elif [[ -e "$dest" ]]; then
+                warn "Not a symlink: $dest"
+                broken=1
+            else
+                warn "Missing: $dest"
+                broken=1
+            fi
+        done
+    done < <(build_plan)
+
+    [[ "$broken" == "0" ]] || warn "Some dotfiles are missing or incorrect"
+    echo
+}
+
+check_services() {
+    echo "User services"
+
+    local units_dir="$HOME/.config/systemd/user"
+
+    [[ -d "$units_dir" ]] || {
+        warn "No user systemd units directory"
+        echo
+        return
+    }
+
+    find "$units_dir" -type l -name "*.service" | while read -r unit; do
+        local name
+        name="$(basename "$unit")"
+
+        if systemctl --user is-active --quiet "$name"; then
+            ok "Active: $name"
+        else
+            warn "Inactive: $name"
+        fi
+    done
+
+    echo
 }
 
 status() {
     echo "perdot status"
     echo
 
-    echo "[CORE]"
-
-    if [[ -L "$GLOBAL_BIN" ]]; then
-        ok "perdot installed"
-    else
-        warn "perdot not installed"
-    fi
-
-    echo "$PATH" | grep -q "$LOCAL_BIN" \
-        && ok "~/.local/bin in PATH" \
-        || warn "~/.local/bin not in PATH"
+    check_repo
+    check_paths
+    check_state
+    check_symlinks
+    check_services
 
     echo
-    status_packages
-    echo
-    status_configs
-    echo
-    status_backups
+    ok "Status check completed"
 }
