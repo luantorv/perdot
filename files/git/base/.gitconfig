@@ -1,0 +1,22 @@
+[core]
+    editor = nvim
+    pager = less -FRX
+
+[color]
+    ui = auto
+
+[init]
+    defaultBranch = main
+
+[pull]
+    rebase = false
+
+[push]
+    default = simple
+
+[diff]
+    algorithm = histogram
+
+[status]
+    short = true
+    branch = true
