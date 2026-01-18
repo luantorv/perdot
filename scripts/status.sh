@@ -117,4 +117,4 @@ status() {
     ok "Status check completed"
 }
 
-status "$@"
+status

@@ -18,4 +18,4 @@ setup() {
     log "Setup complete"
 }
 
-setup "@"
+setup

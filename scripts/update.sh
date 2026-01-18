@@ -29,4 +29,4 @@ do_update() {
     fi
 }
 
-do_update "@"
+do_update

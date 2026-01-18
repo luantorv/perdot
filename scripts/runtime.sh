@@ -23,12 +23,10 @@ SOURCE_BIN="$DOTFILES_ROOT/bin/perdot"
 
 PACKAGES=(
     hyprland
-    eww
     rofi
     mako
     swww
     hyprlock
-    wlogout
     grim
     slurp
     swappy
@@ -39,7 +37,8 @@ PACKAGES=(
 )
 
 AUR_PACKAGES=(
-    # vacío por ahora
+    eww
+    wlogout
 )
 
 SERVICES_MAP=(

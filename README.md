@@ -52,7 +52,7 @@ cd ~/perdot
 Install perdot:
 
 ```sh
-.bin/perdot install
+bin/perdot install
 ```
 
 Prepare the user environment:

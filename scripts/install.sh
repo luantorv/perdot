@@ -69,5 +69,5 @@ install_self() {
 log "Initializing perdot state"
 mkdir -p "$STATE_DIR"/{backups,cache}
 
-install_self "@"
+install_self
 setup_path

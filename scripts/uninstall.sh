@@ -68,4 +68,4 @@ uninstall_self() {
     fi
 }
 
-uninstall_self "@"
+uninstall_self

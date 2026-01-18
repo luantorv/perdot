@@ -75,4 +75,4 @@ doctor() {
     ok "Doctor finished"
 }
 
-doctor "@"
+doctor
