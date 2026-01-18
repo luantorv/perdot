@@ -70,3 +70,4 @@ do_update() {
         exit 0
     fi
 }
+

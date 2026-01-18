@@ -62,3 +62,5 @@ setup() {
 
     log "Setup complete"
 }
+
+setup "@"

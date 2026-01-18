@@ -39,3 +39,5 @@ uninstall_self() {
         fi
     fi
 }
+
+uninstall_self "@"

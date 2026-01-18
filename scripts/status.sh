@@ -115,3 +115,5 @@ status() {
     echo
     ok "Status check completed"
 }
+
+status "$@"

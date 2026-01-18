@@ -74,3 +74,5 @@ doctor() {
     echo
     ok "Doctor finished"
 }
+
+doctor "@"
