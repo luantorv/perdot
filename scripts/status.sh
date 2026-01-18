@@ -3,6 +3,7 @@ set -euo pipefail
 
 source "$SCRIPTS_DIR/runtime.sh"
 source "$SCRIPTS_DIR/utils.sh"
+source "$SCRIPTS_DIR/core/plan.sh"
 
 check_repo() {
     echo "Repository"

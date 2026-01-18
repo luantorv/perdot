@@ -2,7 +2,9 @@
 set -euo pipefail
 
 source "$(dirname "$0")/utils.sh"
-source "$(dirname "$0")/runtime.sh" 
+source "$(dirname "$0")/runtime.sh"
+source "$SCRIPTS_DIR/core/apply.sh"
+source "$SCRIPTS_DIR/core/state.sh"
 
 install_self() {
     log "Installing perdot command"
