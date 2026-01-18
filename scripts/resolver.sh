@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-source "$SCRIPTS_DIR/utils.sh"
-source "$SCRIPTS_DIR/runtime.sh"
+source "$(dirname "$0")/utils.sh"
+source "$(dirname "$0")/runtime.sh"
 source "$SCRIPTS_DIR/backup.sh"
 
 case "$ACTION" in
