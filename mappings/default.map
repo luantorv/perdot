@@ -3,3 +3,7 @@ kitty    ~/.config/kitty
 zsh      ~
 rofi     ~/.config/rofi
 mako     ~/.config/mako
+eww      ~/.config/eww
+wlogout  ~/.config/wlogout
+systemd  ~/.config/systemd
+git      ~
