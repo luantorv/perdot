@@ -230,7 +230,6 @@ echo
 # Paso 9: Crear directorios adicionales
 log "Creando directorios adicionales..."
 
-mkdir -p ~/Pictures/Wallpapers
 mkdir -p ~/Pictures/Screenshots
 mkdir -p ~/.cache/cliphist
 

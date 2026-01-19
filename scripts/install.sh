@@ -47,6 +47,24 @@ setup_path() {
     warn "Restart your shell or run: source $shell_rc"
 }
 
+link_images(){
+    log "Linking wallpapers"
+
+    if [[ "$DRY_RUN" == "1" ]]; then
+        echo "WOULD LINK: $DOTFILE_DIR/assets/wallpapers -> $HOME/Pictures/Wallpapers/dotfiles"
+        return
+    fi
+
+    if [[ ! -d "$DOTFILE_DIR/assets/wallpapers/" ]]; then
+        warn "No wallpapers found in $DOTFILE_DIR/assets/wallpapers/"
+        return
+    fi
+
+    mkdir -p "$HOME/Pictures/Wallpapers/dotfiles"
+    ln -sf "$DOTFILE_DIR/assets/wallpapers/" "$HOME/Pictures/Wallpapers/dotfiles/"
+    log "Wallpapers linked at $HOME/Pictures/Wallpapers/dotfiles"
+}
+
 install_self() {
     log "Installing perdot command"
 
@@ -70,4 +88,5 @@ log "Initializing perdot state"
 mkdir -p "$STATE_DIR"/{backups,cache}
 
 install_self
+link_images
 setup_path
