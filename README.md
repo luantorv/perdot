@@ -34,6 +34,7 @@ perdot/
 │   └── systemd/user/
 ├── mappings/           # Package → target path mappings
 ├── state/              # Runtime state (backups, logs, locks)
+├── bootstrap.sh        # Quick instalation for tasting
 └── README.md
 ```
 

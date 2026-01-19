@@ -201,14 +201,14 @@ echo
 # Paso 5: Instalar perdot
 log "Instalando perdot..."
 
-"$DOTFILES_ROOT/bin/perdot" install
+"$DOTFILES_ROOT/bin/perdot" install --verbose
 
 echo
 
 # Paso 6: Setup de perdot
 log "Configurando entorno con perdot..."
 
-perdot setup
+perdot setup --verbose
 
 echo
 

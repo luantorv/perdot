@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # Paths base
-DOTFILES_ROOT="${DOTFILES_ROOT:?DOTFILES_ROOT not set}"
+DOTFILES_ROOT="$HOME/perdot"
 
 FILES_DIR="$DOTFILES_ROOT/files"
 SCRIPTS_DIR="$DOTFILES_ROOT/scripts"
