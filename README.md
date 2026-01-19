@@ -101,6 +101,14 @@ perdot only links and enables them.
 
 Other setups may work but are not guaranteed.
 
+## Credits
+
+All wallpapers available in [assets/wallpapers](https://github.com/luantorv/perdot/tree/main/assets/wallpapers/) were extracted from [wallhaven](https://wallhaven.cc). 
+
+The wallpapers in this repository are the property of their respective authors. I do not claim ownership of any artwork shared here.
+
+If you recognize any of these works and know the original artist, or if you are the creator of an image and would like it to be specifically credited (or removed), please reach out directly via any of my [contact methods](#author). I am more than happy to update the metadata or the README to ensure every artist gets the recognition they deserve.
+
 ## Disclaimer
 
 This project is primarily designed for personal use.
