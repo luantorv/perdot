@@ -1,226 +1,188 @@
-# BOOTSTRAP.md
+# Bootstrap para perdot
 
-This document describes **how to reproduce the perdot environment end-to-end** on a minimal Arch Linux installation, in an explicit, controlled manner without mandatory hidden abstractions.
+Script de instalación automática para desplegar perdot en una instalación mínima de Arch Linux.
 
-The goal is not to automate everything, but rather **to clearly explain each step**: what it does, why it exists, and which parts are optional.
+## ¿Qué hace el bootstrap?
 
-This accomplishes the same objectives as similar projects, but **transparently and without obfuscation**.
+El script `bootstrap.sh` automatiza todo el proceso de instalación, desde la preparación del sistema hasta la configuración completa del entorno Hyprland.
 
----
+## Proceso paso a paso
 
-## 0. General Philosophy
+### 1. Verificación del sistema
+- Confirma que estás en Arch Linux
+- Verifica que git esté instalado
+- Comprueba la ubicación del repositorio
 
-perdot **is not a system installer** nor a graphical session manager.
+### 2. Instalación de yay
+- Detecta si yay (AUR helper) está instalado
+- Si no lo está, lo instala automáticamente
+- Instala dependencias necesarias (base-devel)
 
-* Does not modify getty automatically
-* Does not edit your shell without notice
-* Does not start Hyprland for you
-* Does not assume you want a display manager
+### 3. Actualización del sistema
+- Ejecuta `pacman -Syu` para actualizar todos los paquetes
 
-All that perdot does is:
+### 4. Instalación de paquetes
+Instala automáticamente todos los paquetes necesarios:
 
-> **orchestrate reproducible configurations**
+**Oficiales (pacman):**
+- Core: hyprland, eww, rofi, mako, kitty
+- Wayland: grim, slurp, swappy, wl-clipboard
+- Sistema: brightnessctl, NetworkManager, polkit-gnome, blueman, udisks2
+- Audio: pipewire, wireplumber, pipewire-pulse, pipewire-alsa, pavucontrol
+- Archivos: thunar, tumbler, ffmpegthumbnailer
+- Temas: nwg-look, qt5ct, qt6ct, papirus-icon-theme
+- Shell: zsh
 
-Everything else is documented.
+**AUR (yay):**
+- hyprlock, hypridle, wlogout
+- swww, cliphist, udiskie
 
----
+### 5. Instalación de perdot
+- Ejecuta `bin/perdot install`
+- Instala perdot en `~/.local/bin/perdot`
+- Hace perdot disponible globalmente
 
-## 1. Expected Starting Point
+### 6. Setup del entorno
+- Ejecuta `perdot setup`
+- Crea symlinks de configuraciones
+- Prepara servicios systemd de usuario
 
-Base system:
+### 7. Servicios del sistema
+- Habilita NetworkManager
+- Habilita Bluetooth (si está disponible)
 
-* Arch Linux (minimal installation)
-* User created (non-root)
-* Internet access
-* TTY login functional
+### 8. Servicios de usuario
+- Habilita pipewire, pipewire-pulse, wireplumber
 
-Recommended minimal packages:
+### 9. Directorios adicionales
+- `~/Pictures/Wallpapers`
+- `~/Pictures/Screenshots`
+- `~/.cache/cliphist`
 
-```sh
-pacman -S git base-devel
+### 10. Configuración de shell y permisos
+- Sugiere cambiar a zsh si no lo es
+- Añade usuario al grupo 'input' (para brightnessctl sin sudo)
+
+### 11. Finalización
+- Muestra resumen de instalación
+- Lista próximos pasos
+- Ofrece cerrar sesión automáticamente
+
+## Uso
+
+### Requisitos previos
+- Arch Linux instalado
+- Git: `sudo pacman -S git`
+- Conexión a internet
+
+### Desde el repositorio clonado
+
+```bash
+git clone https://github.com/luantorv/perdot.git ~/perdot
+cd ~/perdot
+./bootstrap.sh
 ```
 
----
+## Después del bootstrap
 
-## 2. Clone the Repository
+1. **Cerrar sesión** (o reiniciar)
+2. **Seleccionar Hyprland** en el display manager
+3. **Iniciar sesión**
 
-From your user account:
+### Primer inicio en Hyprland
 
-```sh
-git clone https://github.com/USER/perdot.git
-cd perdot
+El entorno estará completamente configurado. Atajos principales:
+- `SUPER + T`: Terminal
+- `SUPER`: Launcher
+- `SUPER + Q`: Cerrar ventana
+
+### Configuración opcional
+
+```bash
+# Añadir wallpapers
+cp tus_wallpapers/* ~/Pictures/Wallpapers/
+
+# Configurar temas
+nwg-look
+qt5ct
+qt6ct
 ```
 
-Do not copy individual files. perdot **requires a complete git repository**.
+## Lo que NO hace el bootstrap
 
----
+Siguiendo la filosofía de perdot:
+- No ejecuta servicios en background
+- No se queda residente en el sistema
+- No modifica configuraciones existentes sin crear backups
+- No toma control del sistema
+- Una vez terminado, desaparece
 
-## 3. Install perdot
+## Comandos útiles post-instalación
 
-```sh
-./bin/perdot install
-```
-
-This performs:
-
-* Initializes `~/perdot/state`
-* Prepares backups
-* Creates the symlink `~/.local/bin/perdot`
-
-After this:
-
-```sh
-perdot --help
-```
-
-If the command is not found, ensure that:
-
-```sh
-echo $PATH | grep .local/bin
-```
-
-If not present, add it manually to your shell.
-
----
-
-## 4. Update Configurations
-
-```sh
+```bash
+# Actualizar configuraciones
 perdot update
-```
 
-This:
-
-* Resolves installed package versions
-* Applies corresponding configurations
-* Creates backups when necessary
-
-Optional:
-
-```sh
-perdot update --packages --services --verbose
-```
-
-Nothing is installed or restarted without explicit flags.
-
----
-
-## 5. User Environment Setup
-
-```sh
-perdot setup
-```
-
-This prepares:
-
-* Required systemd --user units
-* Runtime directories
-* Auxiliary links
-
-⚠ **Important**: perdot does NOT start graphical services or sessions.
-
----
-
-## 6. Start Hyprland (Manual)
-
-From the TTY:
-
-```sh
-Hyprland
-```
-
-If everything is correct:
-
-* The session should start
-* EWW, mako, swww, etc. should load
-
-If something fails:
-
-```sh
-perdot doctor --verbose
-```
-
----
-
-## 7. (Optional) Display Manager
-
-perdot **does not install or configure display managers automatically**.
-
-If you want a managed login experience, you can set this up yourself:
-
-### Option A: greetd
-
-```sh
-pacman -S greetd greetd-tuigreet
-```
-
-Configure `/etc/greetd/config.toml`:
-
-```toml
-[default_session]
-command = "Hyprland"
-user = "YOUR_USER"
-```
-
-Enable:
-
-```sh
-sudo systemctl enable greetd
-```
-
----
-
-### Option B: SDDM (less recommended)
-
-```sh
-pacman -S sddm
-sudo systemctl enable sddm
-```
-
-Configure Hyprland session manually.
-
----
-
-## 8. (Optional) Explicit Automation
-
-If you want to replicate a *ready-at-boot* experience:
-
-* Display manager enabled
-* Hyprland as default session
-* User services enabled
-
-None of this is done by perdot automatically.
-
-This is **a conscious decision**, not a limitation.
-
----
-
-## 9. Final Verification
-
-```sh
+# Ver estado
 perdot status
+
+# Diagnóstico
 perdot doctor
 ```
 
-If both succeed:
+## Estructura respetada
 
-* The environment is correctly reproduced
-* Future updates are performed with `perdot update`
+El bootstrap respeta completamente la estructura de perdot:
+- Usa `bin/perdot install` (no copia manualmente)
+- Usa `perdot setup` (no configura manualmente)
+- Respeta los mappings en `mappings/default.map`
+- No toca la estructura de `files/`
+- No modifica scripts internos
 
----
+## Solución de problemas
 
-## 10. Quick Summary
+### yay falla al instalar
+```bash
+# Instalar manualmente
+sudo pacman -S --needed git base-devel
+git clone https://aur.archlinux.org/yay.git
+cd yay && makepkg -si
+```
 
-| Step | Action            |
-| ---: | ----------------- |
-|    1 | Clone repository  |
-|    2 | `perdot install`  |
-|    3 | `perdot update`   |
-|    4 | `perdot setup`    |
-|    5 | Start Hyprland    |
-|    6 | (Optional) DM     |
+### Paquetes específicos fallan
+El bootstrap continúa aunque algunos paquetes fallen. Puedes instalarlos manualmente después:
+```bash
+yay -S paquete_que_fallo
+```
 
----
+### perdot no se encuentra después
+```bash
+# Verificar instalación
+which perdot
 
-If you were looking for a magic installer, this is not it.
-If you were looking for control, reproducibility, and transparency: welcome.
+# Si no está, reinstalar manualmente
+cd ~/perdot
+ln -sf bin/perdot ~/.local/bin
+sudo chmod +x ~/perdot/bin/perdot
+```
+
+## Compatibilidad
+
+- **Diseñado para**: Arch Linux limpio
+- **Puede causar problemas en**: Arch-based distros o sistemas con configs existentes
+
+## Filosofía
+
+El bootstrap sigue la filosofía de perdot:
+- Simple y directo
+- No intrusivo
+- Fácil de remover
+- No crea dependencias permanentes
+- El sistema funciona sin él una vez terminado
+
+## Autor
+
+Este bootstrap es parte del proyecto perdot:
+- Autor: Reis Viera, Luis
+- GitHub: [@luantorv](https://github.com/luantorv/)
+- Repositorio: https://github.com/luantorv/perdot

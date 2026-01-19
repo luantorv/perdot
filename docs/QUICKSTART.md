@@ -3,6 +3,9 @@
 This guide explains how to reproduce the perdot environment from scratch
 on a minimal Arch Linux installation.
 
+>[!TIP]
+> For faster instalation: [BOOTSTRAP.md](https://github.com/luantorv/perdot/blob/main/docs/BOOTSTRAP.md)
+
 ## Requirements
 
 - Arch Linux (minimal install)
