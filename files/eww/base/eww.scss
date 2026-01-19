@@ -1,0 +1,61 @@
+* {
+  all: unset;
+  font-family: "JetBrainsMono Nerd Font";
+  font-size: 14px;
+}
+
+.bar {
+  background-color: rgba(20, 20, 20, 0.9);
+  padding: 4px 10px;
+}
+
+.workspaces {
+  padding: 2px 8px;
+}
+
+.workspace {
+  min-width: 28px;
+  min-height: 22px;
+  background-color: rgba(60, 60, 60, 0.5);
+  border-radius: 4px;
+  padding: 0 8px;
+  color: rgba(255, 255, 255, 0.5);
+  transition: all 0.2s;
+}
+
+.workspace.occupied {
+  background-color: rgba(80, 80, 80, 0.7);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.workspace.active {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+.time {
+  padding: 0 15px;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.sidestuff {
+  padding: 2px 8px;
+}
+
+.battery, .volume, .network {
+  padding: 0 8px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.battery {
+  color: #98c379;
+}
+
+.volume {
+  color: #61afef;
+}
+
+.network {
+  color: #e5c07b;
+}

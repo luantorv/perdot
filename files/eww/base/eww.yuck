@@ -1,0 +1,66 @@
+(defwindow bar
+  :monitor 0
+  :windowtype "dock"
+  :geometry (geometry :x "0%"
+                      :y "0%"
+                      :width "100%"
+                      :height "30px"
+                      :anchor "top center")
+  :reserve (struts :side "top" :distance "30px")
+  (bar))
+
+(defwidget bar []
+  (box :class "bar"
+       :orientation "h"
+    (workspaces)
+    (box :halign "center"
+      (time))
+    (sidestuff)))
+
+(defwidget workspaces []
+  (box :class "workspaces"
+       :orientation "h"
+       :spacing 8
+       :halign "start"
+    (for workspace in workspaces-data
+      (button :class "workspace ${workspace.active ? 'active' : ''} ${workspace.occupied ? 'occupied' : 'empty'}"
+              :onclick "hyprctl dispatch workspace ${workspace.id}"
+        "${workspace.id}"))))
+
+(deflisten workspaces-data :initial "[]"
+  "scripts/workspaces.sh")
+
+(defwidget time []
+  (box :class "time"
+    (label :text datetime)))
+
+(defpoll datetime :interval "5s"
+  "date '+%H:%M'")
+
+(defwidget sidestuff []
+  (box :class "sidestuff"
+       :orientation "h"
+       :spacing 10
+       :halign "end"
+    (battery)
+    (volume)
+    (network)))
+
+(defwidget battery []
+  (box :class "battery"
+       :visible {EWW_BATTERY != ""}
+    (label :text " ${EWW_BATTERY.BAT0.capacity}%")))
+
+(defwidget volume []
+  (box :class "volume"
+    (label :text " ${volume-level}%")))
+
+(defpoll volume-level :interval "1s"
+  "wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{print int($2*100)}'")
+
+(defwidget network []
+  (box :class "network"
+    (label :text {network-status == "connected" ? " " : " "})))
+
+(defpoll network-status :interval "5s"
+  "nmcli -t -f STATE g | head -1")
