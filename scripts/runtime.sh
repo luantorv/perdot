@@ -46,7 +46,7 @@ SERVICES_MAP=(
     "hypridle:hypridle.service"
 )
 
-CHECK_PACCKAGE=0
+CHECK_PACKAGES=0
 
 # Garantizar estructura mínima
 mkdir -p \
