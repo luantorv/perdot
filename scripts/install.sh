@@ -51,17 +51,17 @@ link_images(){
     log "Linking wallpapers"
 
     if [[ "$DRY_RUN" == "1" ]]; then
-        echo "WOULD LINK: $DOTFILES_DIR/assets/wallpapers -> $HOME/Pictures/Wallpapers/dotfiles"
+        echo "WOULD LINK: $DOTFILES_ROOT/assets/wallpapers -> $HOME/Pictures/Wallpapers/dotfiles"
         return
     fi
 
-    if [[ ! -d "$DOTFILES_DIR/assets/wallpapers/" ]]; then
-        warn "No wallpapers found in $DOTFILES_DIR/assets/wallpapers/"
+    if [[ ! -d "$DOTFILES_ROOT/assets/wallpapers/" ]]; then
+        warn "No wallpapers found in $DOTFILES_ROOT/assets/wallpapers/"
         return
     fi
 
     mkdir -p "$HOME/Pictures/Wallpapers/dotfiles"
-    ln -sf "$DOTFILES_DIR/assets/wallpapers/" "$HOME/Pictures/Wallpapers/dotfiles/"
+    ln -sf "$DOTFILES_ROOT/assets/wallpapers/" "$HOME/Pictures/Wallpapers/dotfiles/"
     log "Wallpapers linked at $HOME/Pictures/Wallpapers/dotfiles"
 }
 
