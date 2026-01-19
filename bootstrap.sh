@@ -212,6 +212,10 @@ log "Configurando entorno con perdot..."
 
 echo
 
+"$DOTFILES_ROOT/bin/perdot" update --verbose
+
+echo
+
 # Paso 7: Habilitar servicios del sistema
 log "Habilitando servicios del sistema..."
 
