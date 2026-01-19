@@ -22,23 +22,61 @@ GLOBAL_BIN="$LOCAL_BIN/perdot"
 SOURCE_BIN="$DOTFILES_ROOT/bin/perdot"
 
 PACKAGES=(
-    hyprland
-    rofi
-    mako
-    swww
-    hyprlock
-    grim
-    slurp
-    swappy
-    pavucontrol
-    wl-clipboard
-    cliphist
-    hypridle
+    # Core Hyprland
+    "hyprland"
+    "eww"
+    "rofi"
+    "mako"
+    "kitty"
+    
+    # Utilidades Wayland
+    "grim"
+    "slurp"
+    "swappy"
+    "wl-clipboard"
+    
+    # Sistema
+    "brightnessctl"
+    "networkmanager"
+    "network-manager-applet"
+    "polkit-gnome"
+    "blueman"
+    "udisks2"
+    
+    # Audio
+    "pipewire"
+    "wireplumber"
+    "pipewire-pulse"
+    "pipewire-alsa"
+    "pavucontrol"
+    
+    # File management
+    "thunar"
+    "tumbler"
+    "ffmpegthumbnailer"
+    
+    # Utilidades
+    "playerctl"
+    "jq"
+    "socat"
+    
+    # Temas
+    "nwg-look"
+    "qt5ct"
+    "qt6ct"
+    "papirus-icon-theme"
+    
+    # Shell
+    "zsh"
 )
 
 AUR_PACKAGES=(
-    eww
-    wlogout
+    "hyprlock"
+    "hypridle"
+    "wlogout"
+    "swww"
+    "cliphist"
+    "udiskie"
 )
 
 SERVICES_MAP=(
