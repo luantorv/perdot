@@ -208,7 +208,7 @@ echo
 # Paso 6: Setup de perdot
 log "Configurando entorno con perdot..."
 
-perdot setup --verbose
+"$DOTFILES_ROOT/bin/perdot" setup --verbose
 
 echo
 
