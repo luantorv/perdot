@@ -37,10 +37,10 @@ forbid_flags() {
 validate_flags() {
     case "$ACTION" in
         install)
-            forbid_flags packages aur services purge [cite: 1, 10, 11, 12, 14, 15]
+            forbid_flags packages aur services purge
             ;;
         doctor|status)
-            forbid_flags dry-run force packages aur services purge [cite: 3, 5, 7, 8, 10, 11, 12, 14, 15]
+            forbid_flags dry-run force packages aur services purge
             ;;
     esac
 }

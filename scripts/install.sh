@@ -6,6 +6,78 @@ source "$(dirname "$0")/runtime.sh"
 source "$SCRIPTS_DIR/core/apply.sh"
 source "$SCRIPTS_DIR/core/state.sh"
 
+install_yay() {
+    log "Installing yay (AUR helper)"
+    
+    if [[ "$DRY_RUN" == "1" ]]; then
+        echo "WOULD INSTALL: yay"
+        return
+    fi
+    
+    # Verificar dependencias
+    if ! pacman -Q base-devel &>/dev/null; then
+        log "Installing base-devel..."
+        sudo pacman -S --needed --noconfirm base-devel
+    fi
+    
+    # Clonar y compilar yay
+    local tmp_dir="/tmp/yay-install-$$"
+    git clone https://aur.archlinux.org/yay.git "$tmp_dir"
+    cd "$tmp_dir"
+    makepkg -si --noconfirm
+    cd -
+    rm -rf "$tmp_dir"
+    
+    log "yay installed successfully"
+}
+
+install_packages() {
+    log "Installing packages"
+    
+    # Lista de paquetes oficiales
+    local all_packages=("${PACKAGES[@]}" "${AUR_PACKAGES[@]}")
+    
+    
+    if [[ "$DRY_RUN" == "1" ]]; then
+        echo "WOULD INSTALL (pacman): ${all_packages[*]}"
+    else
+        log "Installing official packages..."
+        for pkg in "${all_packages[@]}"; do
+            if pacman -Q "$pkg" &>/dev/null; then
+                log "  ✓ $pkg already installed"
+            else
+                log "  → Installing $pkg..."
+                sudo pacman -S --needed --noconfirm "$pkg" || warn "Failed to install $pkg"
+            fi
+        done
+    fi
+    
+    # Instalar paquetes AUR si se solicitó
+    if [[ "$AUR" == "1" ]]; then
+        # Verificar si yay está instalado
+        if ! command -v yay &>/dev/null; then
+            warn "yay not found, installing..."
+            install_yay
+        fi
+        
+        if [[ "$DRY_RUN" == "1" ]]; then
+            echo "WOULD INSTALL (AUR): ${AUR_PACKAGES[*]}"
+        else
+            log "Installing AUR packages..."
+            for pkg in "${AUR_PACKAGES[@]}"; do
+                if pacman -Q "$pkg" &>/dev/null; then
+                    log "  ✓ $pkg already installed"
+                else
+                    log "  → Installing $pkg..."
+                    yay -S --needed --noconfirm "$pkg" || warn "Failed to install $pkg"
+                fi
+            done
+        fi
+    fi
+    
+    log "Package installation complete"
+}
+
 setup_path() {
     log "Configuring PATH for perdot"
     
@@ -86,6 +158,11 @@ install_self() {
 
 log "Initializing perdot state"
 mkdir -p "$STATE_DIR"/{backups,cache}
+
+# Instalar paquetes si se solicitó
+if [[ "${PACKAGES:-0}" == "1" ]]; then
+    install_packages
+fi
 
 install_self
 link_images

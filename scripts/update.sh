@@ -6,7 +6,7 @@ source "$(dirname "$0")/runtime.sh"
 source "$SCRIPTS_DIR/core/plan.sh"
 source "$SCRIPTS_DIR/core/services.sh" 
 
-do_update() {
+update() {
     log "Updating dotfiles repository"
 
     if [[ ! -d "$DOTFILES_ROOT/.git" ]]; then
@@ -29,4 +29,4 @@ do_update() {
     fi
 }
 
-do_update
+update

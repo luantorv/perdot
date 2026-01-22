@@ -24,7 +24,6 @@ SOURCE_BIN="$DOTFILES_ROOT/bin/perdot"
 PACKAGES=(
     # Core Hyprland
     "hyprland"
-    "eww"
     "rofi"
     "mako"
     "kitty"
@@ -42,6 +41,8 @@ PACKAGES=(
     "polkit-gnome"
     "blueman"
     "udisks2"
+    "git"
+    "systemd"
     
     # Audio
     "pipewire"
@@ -71,6 +72,7 @@ PACKAGES=(
 )
 
 AUR_PACKAGES=(
+    "eww-git"
     "hyprlock"
     "hypridle"
     "wlogout"

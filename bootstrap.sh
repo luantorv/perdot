@@ -120,7 +120,6 @@ log "Instalando paquetes necesarios..."
 PACMAN_PKGS=(
     # Core Hyprland
     "hyprland"
-    "eww"
     "rofi"
     "mako"
     "kitty"
@@ -138,6 +137,8 @@ PACMAN_PKGS=(
     "polkit-gnome"
     "blueman"
     "udisks2"
+    "git"
+    "systemd"
     
     # Audio
     "pipewire"
@@ -178,6 +179,7 @@ done
 
 # Paquetes AUR
 AUR_PKGS=(
+    "eww-git"
     "hyprlock"
     "hypridle"
     "wlogout"
@@ -201,7 +203,7 @@ echo
 # Paso 5: Instalar perdot
 log "Instalando perdot..."
 
-"$DOTFILES_ROOT/bin/perdot" install --verbose
+"$DOTFILES_ROOT/bin/perdot" install --packages --aur --verbose
 
 echo
 
